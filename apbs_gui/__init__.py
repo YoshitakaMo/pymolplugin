@@ -90,10 +90,16 @@ Execute the pipeline (prep, apbs, surface vis)
                 return 0
             return get_res_charge(resn)
 
+        try:
+            state = _self.get_selection_state(selection)
+        except BaseException as e:
+            state = -1
+
         if method == 'pdb2pqr':
             warnings = pc.pdb2pqr_cli(prep_name, selection,
                     options=form.pdb2pqr_args.text(),
                     quiet=0,
+                    state=state,
                     preserve=form.check_preserve.isChecked(),
                     fixrna=form.pdb2pqr_fixrna.isChecked(),
                     _proclist=form._proclist,

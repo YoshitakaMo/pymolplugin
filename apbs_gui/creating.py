@@ -80,7 +80,9 @@ def pdb2pqr_cli(name, selection, options, state=-1, preserve=0,
     args = [cmd.exp_path(exe)] + list(options)
 
     tmpdir = tempfile.mkdtemp()
-    infile = os.path.join(tmpdir, 'in.pdb')
+    # Input format should be PDB, but use PQR instead because we can support
+    # multi-state assemblies by not writing MODEL records.
+    infile = os.path.join(tmpdir, 'in.pqr')
     outfile = os.path.join(tmpdir, 'out.pqr')
     args.extend([infile, outfile])
 
