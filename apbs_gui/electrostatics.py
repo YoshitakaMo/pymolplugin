@@ -7,8 +7,6 @@ APBS wrapper
 License: BSD-2-Clause
 '''
 
-from __future__ import print_function
-
 import os
 
 from pymol import cmd, CmdException
@@ -49,16 +47,12 @@ quit
 
 
 def find_apbs_exe():
-    try:
-        import freemol.apbs
-        exe = freemol.apbs.get_exe_path()
-    except:
-        exe = ''
+    import shutil
+    exe = shutil.which('apbs')
     if not exe:
         exe = cmd.exp_path('$SCHRODINGER/utilities/apbs')
         if not os.path.exists(exe):
-            from distutils import spawn
-            exe = spawn.find_executable('apbs')
+            return None
     return exe
 
 
@@ -181,6 +175,8 @@ SEE ALSO
             raise CmdException('apbs failed with code ' + str(r))
 
         dx_list = glob.glob(stem + '*.dx')
+        if not dx_list:
+            dx_list = glob.glob(stem + '*.dxbin')
         if len(dx_list) != 1:
             raise CmdException('dx file missing')
 

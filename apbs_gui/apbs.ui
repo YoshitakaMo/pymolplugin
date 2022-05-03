@@ -357,6 +357,16 @@
                     </property>
                    </widget>
                   </item>
+                  <item>
+                   <widget class="QLineEdit" name="prepwizard_args">
+                    <property name="toolTip">
+                     <string>Additional command line options for prepwizard, for example &quot;-r 2.0&quot; or &quot;-fix&quot;</string>
+                    </property>
+                    <property name="placeholderText">
+                     <string notr="true">extra command line options</string>
+                    </property>
+                   </widget>
+                  </item>
                  </layout>
                 </widget>
                 <widget class="QWidget" name="page_3">
@@ -982,7 +992,7 @@
        <item>
         <widget class="QLabel" name="label_11">
          <property name="text">
-          <string notr="true">Documentation: &lt;a href=&quot;http://apbs-pdb2pqr.readthedocs.io/en/latest/apbs/input/&quot;&gt;apbs-pdb2pqr.readthedocs.io&lt;/a&gt;</string>
+          <string notr="true">Documentation: &lt;a href=&quot;https://apbs.readthedocs.io/en/latest/using/input/elec/&quot;&gt;apbs.readthedocs.io&lt;/a&gt;</string>
          </property>
          <property name="openExternalLinks">
           <bool>true</bool>
@@ -1129,7 +1139,7 @@
           <item row="0" column="1">
            <widget class="QLineEdit" name="pdb2pqr_args">
             <property name="text">
-             <string notr="true">--ff=AMBER --chain</string>
+             <string notr="true">--ff=AMBER</string>
             </property>
            </widget>
           </item>

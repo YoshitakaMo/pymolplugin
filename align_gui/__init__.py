@@ -4,8 +4,6 @@ PyMOL Alignment GUI Plugin
 (c) Schrodinger, Inc.
 '''
 
-from __future__ import absolute_import
-
 import os
 
 

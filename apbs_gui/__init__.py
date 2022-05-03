@@ -4,9 +4,6 @@ PyMOL APBS GUI Plugin
 (c) Schrodinger, Inc.
 '''
 
-from __future__ import absolute_import
-from __future__ import print_function
-
 import sys
 import os
 import importlib
@@ -111,6 +108,7 @@ Execute the pipeline (prep, apbs, surface vis)
             _self.util.protein_assign_charges_and_radii(prep_name)
         elif method.startswith('prepwizard'):
             pc.prepwizard(prep_name, selection,
+                    options=form.prepwizard_args.text(),
                     _proclist=form._proclist,
                     quiet=0,
                     preserve=form.check_preserve.isChecked())
@@ -223,13 +221,14 @@ def dialog(_self=None):
     set_apbs_in(electrostatics.template_apbs_in)
 
     # executables
-    from distutils.spawn import find_executable
+    from shutil import which
     form.apbs_exe.setText(electrostatics.find_apbs_exe() or 'apbs')
-    form.pdb2pqr_exe.setText(find_executable('pdb2pqr') or
+    form.pdb2pqr_exe.setText(
+            which('pdb2pqr') or
+            which('pdb2pqr30') or
             # acellera::htmd-pdb2pqr provides pdb2pqr_cli
-            find_executable('pdb2pqr_cli') or
-            find_executable('share/pdb2pqr/pdb2pqr.py',
-                os.getenv('FREEMOL', '/usr')) or 'pdb2pqr')
+            which('pdb2pqr_cli') or 'pdb2pqr')
+
 
     # for async panels
     form._callInMainThread = MainThreadCaller()
@@ -432,6 +431,10 @@ def load_apbs_in(form, filename, contents=''):
                     # absolute path in input file
                     a[2] = '"' + filename + '"'
                     line = ' '.join(a)
+                else:
+                    QMessageBox.warning(
+                        form._dialog, "Warning",
+                        f'Warning: File "{filename}" does not exist')
 
         elif section == 'elec':
             if key == 'write':

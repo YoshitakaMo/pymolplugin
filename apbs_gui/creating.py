@@ -5,8 +5,6 @@
 License: BSD-2-Clause
 '''
 
-from __future__ import print_function
-
 from pymol import cmd, CmdException
 
 
@@ -208,8 +206,15 @@ ARGUMENTS
         env = dict(os.environ)
         env.pop('PYTHONEXECUTABLE', '')  # messes up Python on Mac
 
+        import pymol
+        if pymol.IS_WINDOWS:
+            # Fix for 2020-4 (PYMOL-3572)
+            import ctypes
+            ctypes.windll.kernel32.SetDllDirectoryW(None)
+
         p = subprocess.Popen(args, cwd=tmpdir,
                 env=env,
+                universal_newlines=True,
                 stdin=subprocess.PIPE,  # Windows pythonw fix
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT)
@@ -223,11 +228,6 @@ ARGUMENTS
             raise CmdException('prepwizard terminated')
 
         if p.returncode != 0:
-            logfile = os.path.join(tmpdir, 'in.log')
-            if os.path.exists(logfile):
-                with open(logfile) as handle:
-                    print(handle.read())
-
             raise CmdException('%s failed with exit status %d' % (args[0], p.returncode))
 
         cmd.load(os.path.join(tmpdir, outfile), name)
@@ -235,6 +235,10 @@ ARGUMENTS
         print(e)
         raise CmdException('Cannot execute "%s"' % (exe))
     finally:
+        logfile = os.path.join(tmpdir, 'in.log')
+        if os.path.exists(logfile):
+            with open(logfile) as handle:
+                print(handle.read())
         if not preserve:
             shutil.rmtree(tmpdir)
         elif not quiet:
